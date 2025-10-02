@@ -3,11 +3,11 @@ import os, re
 from crewai.tools import tool
 from firecrawl import FirecrawlApp, ScrapeOptions
 
-
+# Enhanced from search_tool+scrape_tool (news-reader-agent) to web_search_tool
 @tool
 def web_search_tool(query: str):
     """A tool for performing web searches using the Firecrawl API."""
-    
+
     app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
 
     response = app.search(
@@ -29,6 +29,7 @@ def web_search_tool(query: str):
         url = result["url"]
         markdown = result["markdown"]
 
+        # Remove backslashes, newlines, and markdown links
         cleaned = re.sub(r"\\+|\n+", "", markdown).strip()
         cleaned = re.sub(r"\[[^\]]+\]\([^\)]+\)|https?://[^\s]+", "", cleaned)
 
